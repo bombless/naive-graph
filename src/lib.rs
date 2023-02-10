@@ -1,16 +1,11 @@
 use std::collections::HashMap;
 use std::ops::{Index, IndexMut};
 
-#[derive(Eq, PartialEq, PartialOrd, Ord, Clone, Copy, Hash)]
+#[derive(Debug, Eq, PartialEq, PartialOrd, Ord, Clone, Copy, Hash)]
 pub struct NodeId(usize);
 
-#[derive(Eq, PartialEq, PartialOrd, Ord, Clone, Copy, Hash)]
+#[derive(Debug, Eq, PartialEq, PartialOrd, Ord, Clone, Copy, Hash)]
 pub struct EdgeId(usize);
-
-#[derive(Default, Clone)]
-pub struct Node<NodeUserData = ()> {
-    user_data: NodeUserData,
-}
 
 #[derive(Default, Clone)]
 pub struct Edge<EdgeUserData = ()> {
