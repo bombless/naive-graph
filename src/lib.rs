@@ -1,5 +1,6 @@
 use std::collections::{HashMap, HashSet};
 use std::ops::{Index, IndexMut};
+use std::fmt::{Debug, Formatter, Result as FmtRs};
 
 #[derive(Debug, Eq, PartialEq, PartialOrd, Ord, Clone, Copy, Hash)]
 pub struct NodeId(usize);
@@ -19,6 +20,17 @@ pub struct Graph<NodeUserData = (), EdgeUserData = ()> {
     edges_data: HashMap<EdgeId, EdgeUserData>,
 
     edge_nodes: HashMap<EdgeId, (NodeId, NodeId)>,
+}
+
+impl<NodeUserData, EdgeUserData> Debug for Graph<NodeUserData, EdgeUserData> {
+    fn fmt(&self, f: &mut Formatter) -> FmtRs {
+        write!(f, "{}", "{")?;
+        write!(f, "nodes: [{:?}], edges: [", self.nodes_data.keys())?;
+        for (_, (NodeId(n1), NodeId(n2))) in &self.edge_nodes {
+            write!(f, "({} {})", n1, n2)?
+        }
+        write!(f, "{}", "]}")
+    }
 }
 
 impl<NodeUserData, EdgeUserData> Index<NodeId> for Graph<NodeUserData, EdgeUserData> {
@@ -116,6 +128,9 @@ impl<NodeUserData, EdgeUserData> Graph<NodeUserData, EdgeUserData> {
     }
     pub fn node_count(&self) -> usize {
         self.nodes_data.len()
+    }
+    pub fn edge_count(&self) -> usize {
+        self.edges_data.len()
     }
     pub fn neighbor_id_set(&self, id: NodeId) -> HashSet<NodeId> {
         let mut neighbors = HashSet::new();
