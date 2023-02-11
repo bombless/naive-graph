@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::ops::{Index, IndexMut};
 
 #[derive(Debug, Eq, PartialEq, PartialOrd, Ord, Clone, Copy, Hash)]
@@ -116,6 +116,17 @@ impl<NodeUserData, EdgeUserData> Graph<NodeUserData, EdgeUserData> {
     }
     pub fn node_count(&self) -> usize {
         self.nodes_data.len()
+    }
+    pub fn neighbor_id_set(&self, id: NodeId) -> HashSet<NodeId> {
+        let mut neighbors = HashSet::new();
+        for (_, (l, r)) in &self.edge_nodes {
+            if l == &id {
+                neighbors.insert(*l);
+            } else if r == &id {
+                neighbors.insert(*r);
+            }
+        }
+        neighbors
     }
     pub fn neighbors_data<'a>(&'a self, id: NodeId) -> NeighborsData<'a, NodeUserData> {
         let mut neighbors = Vec::new();
