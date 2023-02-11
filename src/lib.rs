@@ -108,10 +108,10 @@ impl<NodeUserData, EdgeUserData> Graph<NodeUserData, EdgeUserData> {
         }
     }
     pub fn index_twice_mut(&mut self, id1: NodeId, id2: NodeId) -> (&mut NodeUserData, &mut NodeUserData) {
+        if id1 == id2 { panic!() }
         unsafe {
             let self_mut = self as *mut _;
-            (<Self as IndexMut<NodeId>>::index_mut(&mut *self_mut, id1),
-             <Self as IndexMut<NodeId>>::index_mut(&mut *self_mut, id2))
+            (Self::index_mut(&mut *self_mut, id1), Self::index_mut(&mut *self_mut, id2))
         }
     }
     pub fn node_count(&self) -> usize {
@@ -121,9 +121,9 @@ impl<NodeUserData, EdgeUserData> Graph<NodeUserData, EdgeUserData> {
         let mut neighbors = HashSet::new();
         for (_, (l, r)) in &self.edge_nodes {
             if l == &id {
-                neighbors.insert(*l);
-            } else if r == &id {
                 neighbors.insert(*r);
+            } else if r == &id {
+                neighbors.insert(*l);
             }
         }
         neighbors
@@ -132,9 +132,9 @@ impl<NodeUserData, EdgeUserData> Graph<NodeUserData, EdgeUserData> {
         let mut neighbors = Vec::new();
         for (_, (l, r)) in &self.edge_nodes {
             if l == &id {
-                neighbors.push((*l, self.nodes_data.get(l).unwrap()));
+                neighbors.push((*l, self.nodes_data.get(r).unwrap()));
             } else if r == &id {
-                neighbors.push((*r, self.nodes_data.get(r).unwrap()));
+                neighbors.push((*r, self.nodes_data.get(l).unwrap()));
             }            
         }
         NeighborsData(neighbors)
@@ -143,9 +143,9 @@ impl<NodeUserData, EdgeUserData> Graph<NodeUserData, EdgeUserData> {
         let mut neighbors = Vec::new();
         for (_, (l, r)) in &self.edge_nodes {
             if l == &id {
-                neighbors.push(*l);
-            } else if r == &id {
                 neighbors.push(*r);
+            } else if r == &id {
+                neighbors.push(*l);
             }            
         }
         Neighbors(neighbors)
