@@ -147,9 +147,9 @@ impl<NodeUserData, EdgeUserData> Graph<NodeUserData, EdgeUserData> {
         let mut neighbors = Vec::new();
         for (_, (l, r)) in &self.edge_nodes {
             if l == &id {
-                neighbors.push((*l, self.nodes_data.get(r).unwrap()));
+                neighbors.push((*r, self.nodes_data.get(r).unwrap()));
             } else if r == &id {
-                neighbors.push((*r, self.nodes_data.get(l).unwrap()));
+                neighbors.push((*l, self.nodes_data.get(l).unwrap()));
             }            
         }
         NeighborsData(neighbors)
